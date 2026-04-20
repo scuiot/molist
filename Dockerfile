@@ -8,7 +8,7 @@ RUN apk add --no-cache curl
 
 # 下载 v3.39.4 版本（这个版本可能没有 CVE-2026-33186 漏洞）
 RUN curl -L -o /tmp/openlist.tar.gz \
-    https://github.com/OpenListTeam/OpenList/releases/download/v3.39.4/openlist-linux-amd64.tar.gz && \
+    https://github.com/OpenListTeam/OpenList/releases/download/beta/openlist-linux-amd64.tar.gz && \
     tar -xzf /tmp/openlist.tar.gz -C /tmp/ && \
     chmod +x /tmp/openlist
 
