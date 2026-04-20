@@ -1,17 +1,26 @@
-FROM alpine
+# 使用官方轻量镜像，避免漏洞
+FROM alpine:3.18
 
-COPY ./content /workdir/
+# 安装必要工具
+RUN apk add --no-cache curl ca-certificates
 
-WORKDIR /tmp
+# 下载 OpenList 最新版
+RUN curl -L https://github.com/OpenListTeam/OpenList/releases/latest/download/openlist-linux-amd64.tar.gz -o openlist.tar.gz && \
+    tar -zxvf openlist.tar.gz && \
+    rm openlist.tar.gz && \
+    chmod +x openlist
 
-RUN apk add --no-cache ca-certificates bash tzdata jq \
-    && sh /workdir/install.sh \
-    && rm /workdir/install.sh \
-    && addgroup -g 10002 choreo && adduser -D -u 10001 -G choreo choreo
- 
-ENV PORT=3000
-ENV TZ=UTC
+# 创建数据目录
+RUN mkdir -p /opt/openlist/data
 
-USER 10001
+# 设置工作目录
+WORKDIR /opt/openlist
 
-ENTRYPOINT ["sh", "/workdir/entrypoint.sh"]
+# 暴露端口
+EXPOSE 5244
+
+# 设置环境变量
+ENV PORT=5244
+
+# 启动命令
+CMD ["./openlist", "server"]
